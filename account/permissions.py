@@ -17,10 +17,13 @@ class MembersPermission(permissions.BasePermission):
 
 class AssignedPermission(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        print(request.user)
-        print(obj.assign_to)
+        if request.user.is_authenticated:
+            print(request.user)
+            return obj.assigned_to.id == request.user.id
+        # print(request.user)
+        # print(obj.assign_to)
 
-        return obj.assign_to.id == request.user.id
+        return True
 
 
 

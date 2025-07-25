@@ -20,6 +20,9 @@ class Project(BaseModel):
         ordering = ('-created_at',)
         # unique_together = ('name','description')
 
+    def __str__(self):
+        return self.name
+
 
 
 
@@ -35,3 +38,7 @@ class Task(BaseModel):
         db_table = 'task'
         ordering = ('-created_at',)
 
+
+
+    def __str__(self):
+        return self.title

@@ -26,6 +26,11 @@ SECRET_KEY = 'django-insecure-rrt49wev75uyuu!+8)vm+#7%isl7+_k02hm2jqacv$t1dnt)3-
 DEBUG = True
 
 ALLOWED_HOSTS = []
+INTERNAL_IPS = [
+
+    "127.0.0.1",
+
+]
 
 
 # Application definition
@@ -37,16 +42,26 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #local
     'account',
     'comman',
     'task',
+    'notifications',
+
+    # global
     'rest_framework',
     'rest_framework_simplejwt',
+    "django_filters",
+    'drf_yasg',
+    'django_celery_beat',
+    'debug_toolbar',
+
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',  # toolbar
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -78,7 +93,11 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
-    )
+    ),
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 100
+
 
 }
 
@@ -128,7 +147,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tashkent'
 
 USE_I18N = True
 
@@ -187,3 +206,20 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+
+
+# celery
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+
+CELERY_RESULT_BACKEND ='redis://localhost:6379/0'
+
+CELERY_TASK_TRACK_STARTED = True
+
+CELERY_TASK_TIME_LIMIT = 1800
+
+CELERY_TIMEZONE = 'Asia/Tashkent'
+
+
+# task
+
+CELERY_BEAT_SCHEDULER ='django_celery_beat.schedulers.DatabaseScheduler'
