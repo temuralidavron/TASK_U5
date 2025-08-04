@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-rrt49wev75uyuu!+8)vm+#7%isl7+_k02hm2jqacv$t1dnt)3-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 INTERNAL_IPS = [
 
     "127.0.0.1",
@@ -36,6 +36,7 @@ INTERNAL_IPS = [
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     'comman',
     'task',
     'notifications',
+    'chat',
 
     # global
     'rest_framework',
@@ -55,6 +57,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_celery_beat',
     'debug_toolbar',
+
 
 ]
 
@@ -86,7 +89,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = 'config.asgi.application'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -103,24 +106,24 @@ REST_FRAMEWORK = {
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "task_u5_pro",
-        "USER": "postgres",
-        "PASSWORD": "1995",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
-    }
-}
-
+#
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "task_u5_pro",
+#         "USER": "postgres",
+#         "PASSWORD": "1995",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 
 # Password validation
@@ -223,3 +226,21 @@ CELERY_TIMEZONE = 'Asia/Tashkent'
 # task
 
 CELERY_BEAT_SCHEDULER ='django_celery_beat.schedulers.DatabaseScheduler'
+
+
+CHANNEL_LAYERS = {
+
+    "default": {
+
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+
+        "CONFIG": {
+
+            "hosts": [("127.0.0.1", 6379)],
+
+        },
+
+    },
+
+}
+
