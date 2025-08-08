@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 from datetime import timedelta
 from pathlib import Path
+from decouple import config
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -107,23 +109,26 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 #
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "task_u5_pro",
-#         "USER": "postgres",
-#         "PASSWORD": "1995",
-#         "HOST": "127.0.0.1",
-#         "PORT": "5432",
-#     }
-# }
+from decouple import config
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DB_NAME"),
+        "USER": config("DB_USER"),
+        "PASSWORD": config("DB_PASSWORD"),
+        "HOST": config("DB_HOST"),  # Docker konteyner nomi bo'lishi kerak
+        "PORT": "5432",
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation
@@ -212,35 +217,20 @@ SIMPLE_JWT = {
 
 
 # celery
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
 
-CELERY_RESULT_BACKEND ='redis://localhost:6379/0'
-
+CELERY_BROKER_URL = config('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND')
 CELERY_TASK_TRACK_STARTED = True
-
 CELERY_TASK_TIME_LIMIT = 1800
-
 CELERY_TIMEZONE = 'Asia/Tashkent'
 
-
-# task
-
-CELERY_BEAT_SCHEDULER ='django_celery_beat.schedulers.DatabaseScheduler'
-
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
 
 CHANNEL_LAYERS = {
-
     "default": {
-
         "BACKEND": "channels_redis.core.RedisChannelLayer",
-
         "CONFIG": {
-
-            "hosts": [("127.0.0.1", 6379)],
-
+            "hosts": [(config('REDIS_HOST'), 6379)],
         },
-
     },
-
 }
-
